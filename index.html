@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA Evolution: The Comic Strip</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Saira:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#000000;--ink:#f4f4f2;--mute:#ffffff;--red:#D3D3D3;}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:Saira,Saira,sans-serif;line-height:1.5;
+  background:var(--paper) radial-gradient(rgba(255,255,255,.1) 1.2px,transparent 1.4px) 0 0/10px 10px;}
+.wrap{width:min(1180px,94vw);margin:0 auto}
+.top{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:4px solid var(--ink)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:Saira,Saira,sans-serif;font-size:34px;letter-spacing:.04em;text-decoration:none;color:var(--ink)}
+.logo span{color:var(--red)}
+.top nav{display:flex;gap:22px;font-weight:700}
+.top nav a{text-decoration:none;color:var(--ink)}
+.top nav a:hover{color:var(--red)}
+
+section.strip{padding:40px 0 60px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.sec-head h2{font-family:Saira Black,Impact,sans-serif;font-weight:400;font-size:clamp(44px,6vw,80px);margin:0;line-height:.9}
+.sec-head p{margin:0;max-width:44ch;color:var(--mute)}
+.panels{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.panel{background:#3a3a40;border:4px solid #000;box-shadow:7px 7px 0 #000;transition:transform .15s}
+.panel:hover{transform:rotate(-.6deg) translateY(-3px)}
+.panel .art{position:relative;aspect-ratio:4/4.2;border-bottom:4px solid #000;overflow:hidden}
+.scene,.scene img,.scene svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.cap{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px}
+.cap .y{font-family:Saira Black,Saira Black,sans-serif;font-size:24px;color:var(--red);line-height:1}
+.cap .n{font-family:Saira Black,Saira Black,sans-serif;font-size:24px;line-height:1.05}
+.cap .d{font-size:14px;color:var(--mute)}
+
+footer{border-top:4px solid var(--ink);padding:26px 0 40px;font-size:14px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+a.panel{display:flex;flex-direction:column;text-decoration:none;color:inherit}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">GTA <span>Evolution</span></a>
+    <nav aria-label="Primary"><a href="#strip">THE HALL OF FAME</a><a href="#about">About</a></nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="THE HALL OF FAME" id="strip">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>THE HALL OF FAME</h2>
+        <p>15 entries in release order.</p>
+      </div>
+      <div class="panels" id="panels"></div>
+    </div>
+  </section>
+
+  <section id="about" class="wrap" style="padding:10px 0 40px">
+    <div class="sec-head"><h2>About</h2></div>
+    <p style="max-width:70ch;color:var(--mute);font-size:17px">This project is made by a fan to make the GTA series more accessible to the internet. Every panel is clickable and leads to a browser link where you can play the GTA game for free. The only ones without the link are GTA Online, GTA 6, GTA Trilogy, GTA TBoGT and GTA LCS .</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Fan-made tribute. Grand Theft Auto is a trademark of Rockstar Games.</span>
+    <span>MADE BY A FAN. FOR THE FANS.</span>
+  </div>
+</footer>
+
+<script>
+/* ===== 1. YOUR PICTURES: path to each file, relative to this HTML file ===== */
+const IMAGES={
+  0:"GTA.jpg",
+  1:"GTA2.jpg",
+  2:"GTA3.jpg",
+  3:"GTAVC.jpg",
+  4:"GTASA.jpg",
+  5:"GTAADV.png",
+  6:"GTALCS.jpg",
+  7:"GTAVCS.jpg",
+  8:"GTA4.jpg",
+  9:"GTACTW.jpg",
+  10:"GTABGT.jpg",
+  11:"GTA5.png",
+  12:"GTAONLINE.png",
+  13:"GTATRI.jpg",
+  14:"GTA6.png"
+
+};
+
+/* ===== 2. GAME DATA ===== */
+const ERAS=[
+{y:"1997",n:"Grand Theft Auto",t:"Where the legend of open-world crime began.",
+ d:"A bird’s-eye crime sandbox from DMA Design. Small sprites, big ideas, and the first taste of a city you could do anything in.",},
+{y:"1999",n:"Grand Theft Auto 2",t:"The future belongs to those who control the streets.",
+ d:"A top-down follow-up set in a future city split between rival gangs. Turf wars drive the story.",},
+{y:"2001",n:"Grand Theft Auto III",t:"Liberty City, where silence speaks louder than loyalty.",
+ d:"The series moves to a full 3D city. A silent lead, a grey harbour city and total freedom to roam.",},
+{y:"2002",n:"Vice City",t:"Neon lights, endless ambition and an empire to build.",
+ d:"Palm-lined boulevards, pastel suits and an 80s soundtrack. Vice City gives the series its brightest look.",},
+{y:"2004",n:"San Andreas",t:"From the streets to the summit, this is the American dream.",
+ d:"Three cities and the countryside between them. Stats, customisation and gang turf stretch the formula to its widest scale.",},
+{y:"2005",n:"GTA Advance",t:"Liberty City has another story to tell.",
+ d:"A top-down handheld entry that brings the city to a small screen, built on the Game Boy Advance.",},
+{y:"2005",n:"Liberty City Stories",t:"Every empire has a beginning, and every city has a price.",
+ d:"A portable prequel set in the years before the events of GTA III, with a new cast and a bigger city feel.",},
+{y:"2006",n:"Vice City Stories",t:"Before the legend, there was the rise.",
+ d:"A portable prequel set in 1984 Vice City, following a new lead through the rise of crime in the city.",},
+{y:"2008",n:"Grand Theft Auto IV",t:"The American dream comes at a price.",
+ d:"A heavier, grounded tone and a more physical city. The story turns to immigration, loyalty and the cost of the American dream.",},
+{y:"2009",n:"Chinatown Wars",t:"Honour, betrayal and power collide in Liberty City.",
+ d:"A top-down entry for handheld consoles, set in Chinatown and nearby districts with a new cast and a cartoon look.",},
+{y:"2009",n:"The Ballad of Gay Tony",t:"In a city of excess, only the bold survive.",
+ d:"A top-down entry for handheld consoles, set in Chinatown and nearby districts with a new cast and a cartoon look.",},
+{y:"2013",n:"Grand Theft Auto V",t:"Three lives, one city, and a fortune worth risking everything for.",
+ d:"A sunlit, enormous Los Santos-inspired map with three leads you can switch between at any moment.",},
+{y:"2013",n:"Grand Theft Auto Online",t:"Your city, your empire, your rules; the streets are yours to conquer.",
+ d:"A sunlit, enormous Los Santos-inspired map with three leads you can switch between at any moment.",},
+{y:"2021",n:"GTA: The Trilogy",t:"Three legendary cities, three unforgettable stories, one timeless legacy.",
+ d:"A sunlit, enormous Los Santos-inspired map with three leads you can switch between at any moment.",},
+{y:"2026",n:"Grand Theft Auto VI",t:"Two lives, one unforgiving paradise, and a new chapter in the legacy of crime.",
+ d:"The series heads to Leonida, a Florida-inspired state. Neon heat, new leads and the biggest map the series has shown.",}
+];const DEFAULTS={sky:"#334155",bld:"#1f2937",win:"#fde68a",sun:"#facc15",road:"#111",jacket:"#2563eb",hair:"#222",pants:"#111827",car:"#dc2626",place:"",acc:"#ffffff",shades:false};
+ERAS.forEach((e,i)=>{ ERAS[i]=Object.assign({},DEFAULTS,e); });
+
+/* ===== 3. DRAWN FALLBACK SCENES (used only when a picture is missing) ===== */
+function figure(e){
+  return `<g transform="translate(-6,22)">
+    <rect x="86" y="150" width="22" height="92" fill="${e.pants}" stroke="#111" stroke-width="4"/>
+    <rect x="114" y="150" width="22" height="92" fill="${e.pants}" stroke="#111" stroke-width="4"/>
+    <path d="M70 108 Q100 92 130 108 L142 206 L58 206 Z" fill="${e.jacket}" stroke="#111" stroke-width="4"/>
+    <circle cx="100" cy="80" r="25" fill="#f2c9a0" stroke="#111" stroke-width="4"/>
+    <path d="M74 74 Q100 40 126 74 L126 68 Q100 48 74 68 Z" fill="${e.hair}" stroke="#111" stroke-width="3"/>
+    ${e.shades?'<rect x="83" y="74" width="34" height="12" rx="4" fill="#111"/>':''}
+  </g>`;
+}
+function car(e){
+  return `<g transform="translate(96,0)">
+    <path d="M6 220 Q6 196 26 196 L52 186 Q60 182 74 182 L104 182 Q116 182 124 192 L146 198 Q154 200 154 210 L154 222 L6 222 Z" fill="${e.car}" stroke="#111" stroke-width="4"/>
+    <circle cx="36" cy="224" r="14" fill="#111"/><circle cx="124" cy="224" r="14" fill="#111"/>
+  </g>`;
+}
+function scene(e){
+  return `<svg viewBox="0 0 200 250" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${e.n}">
+    <rect width="200" height="250" fill="${e.sky}"/>
+    <circle cx="156" cy="46" r="26" fill="${e.sun}" stroke="#111" stroke-width="4"/>
+    <rect x="0" y="120" width="40" height="130" fill="${e.bld}" stroke="#111" stroke-width="4"/>
+    <rect x="104" y="84" width="50" height="166" fill="${e.bld}" stroke="#111" stroke-width="4"/>
+    <rect x="0" y="222" width="200" height="28" fill="${e.road}" stroke="#111" stroke-width="4"/>
+    ${car(e)}${figure(e)}
+    <rect x="8" y="10" width="${e.place.length*9+18}" height="22" fill="#111"/>
+    <text x="16" y="27" font-family="Bangers, Impact, sans-serif" font-size="16" fill="${e.acc}">${e.place}</text>
+  </svg>`;
+}
+
+/* ===== 4. BUILD THE STRIP ===== */
+function sceneHTML(i){
+  if(IMAGES[i]) return `<img src="${IMAGES[i]}" alt="${ERAS[i].n}">`;
+  return scene(ERAS[i]);
+}
+/* Web address for each panel, in ERAS order. Leave "" for no link. */
+const LINKS={
+  0:"https://www.playdosgames.com/play/grand-theft-auto/",
+  1:"https://m1stermo.github.io/gta2/",
+  2:"https://quenq.com/apps/gta-3/",
+  3:"https://quenq.com/apps/vice-city/",
+  4:"https://wix3.com/ps2/X_GTASA/",
+  5:"https://www.retrogames.cc/gameboyadvance-games/grand-theft-auto-advance-u-mode7.html",
+  6:"",
+  7:"https://bigpicture.playtab.fun/playing/gta-vicce-city-stories",
+  8:"https://bigpicture.playtab.fun/playing/gran-theft-auto-iv",
+  9:"https://bigpicture.playtab.fun/playing/gta-chinatown-wars",
+  10:"",
+  11:"https://v2.fiveplay.lol/launcher.html",
+  12:"",
+  13:"",
+  14:""
+
+};
+
+const panels=document.getElementById("panels");
+ERAS.forEach((e,i)=>{
+  const link=LINKS[i]||"#";
+  const a=document.createElement("a");
+  a.className="panel";
+  a.href=link;
+  if(link.startsWith("http")){ a.target="_blank"; a.rel="noopener"; }
+  a.innerHTML=`
+    <div class="art"><div class="scene" id="scene-${i}"></div></div>
+    <div class="cap"><div class="y">${e.y}</div><div class="n">${e.n}</div><div class="d">${e.t}</div></div>`;
+  panels.appendChild(a);
+  document.getElementById("scene-"+i).innerHTML=sceneHTML(i);
+});
+
+</script>
+</body>
+</html>
